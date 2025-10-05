@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -9,11 +11,9 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // Fetch user
         const resUser = await fetch("/api/me");
         if (resUser.ok) setUser(await resUser.json());
 
-        // Fetch playlists
         const resPl = await fetch("/api/playlists");
         if (resPl.ok) setPlaylists(await resPl.json());
       } catch (err) {
@@ -24,18 +24,20 @@ export default function Home() {
     fetchData();
   }, []);
 
-  if (loading) return <p className="text-center mt-40 text-zinc-500">Loading...</p>;
+  if (loading)
+    return (
+      <p className="text-center mt-40 text-zinc-500">Loading...</p>
+    );
 
   if (!user)
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
         <h1 className="text-4xl font-bold mb-4">Spotify Clone</h1>
-        <a
-          href="/api/login"
-          className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded font-semibold"
-        >
-          Login with Spotify
-        </a>
+        <Link href="/api/login">
+          <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded font-semibold">
+            Login with Spotify
+          </button>
+        </Link>
       </div>
     );
 
@@ -45,9 +47,9 @@ export default function Home() {
       <aside className="w-64 bg-zinc-800 p-6 flex flex-col">
         <h2 className="text-2xl font-bold mb-8">Spotify</h2>
         <nav className="flex flex-col gap-4">
-          <a href="#" className="hover:text-green-500">Home</a>
-          <a href="#" className="hover:text-green-500">Search</a>
-          <a href="#" className="hover:text-green-500">Your Library</a>
+          <Link href="#" className="hover:text-green-500">Home</Link>
+          <Link href="#" className="hover:text-green-500">Search</Link>
+          <Link href="#" className="hover:text-green-500">Your Library</Link>
         </nav>
       </aside>
 
@@ -56,11 +58,17 @@ export default function Home() {
         {/* Header */}
         <header className="flex justify-end mb-8 items-center gap-4">
           <span>{user.display_name}</span>
-          <img
-            src={user.images?.[0]?.url || "https://via.placeholder.com/40"}
-            alt="Profile"
-            className="w-10 h-10 rounded-full"
-          />
+          {user.images?.[0]?.url ? (
+            <Image
+              src={user.images[0].url}
+              alt="Profile"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+          ) : (
+            <div className="w-10 h-10 bg-gray-600 rounded-full" />
+          )}
         </header>
 
         {/* Playlists */}
@@ -73,9 +81,11 @@ export default function Home() {
                 className="bg-zinc-800 rounded-lg p-4 hover:bg-zinc-700 transition cursor-pointer"
               >
                 {pl.images[0] && (
-                  <img
+                  <Image
                     src={pl.images[0].url}
                     alt={pl.name}
+                    width={300}
+                    height={160}
                     className="w-full h-40 object-cover rounded mb-2"
                   />
                 )}
