@@ -70,7 +70,7 @@ export default function LandingPage() {
         />
         {/* <h1 className="text-3xl font-bold tracking-tight">Spotify</h1> */}
       </div>
-
+{/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
       <a
         href="/api/login"
         className="bg-white text-zinc-900 font-semibold px-5 py-2 rounded-full shadow hover:scale-105 transform transition"
